@@ -1,0 +1,10 @@
+torch>=1.12
+torchvision
+tqdm
+numpy
+Pillow
+opencv-python
+scikit-image
+onnx
+onnxruntime
+torchmetrics
