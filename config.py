@@ -11,7 +11,7 @@ import os
 # -------------------------
 # Replace DRIVE_ROOT with your Google Drive folder where models and logs will be saved.
 DRIVE_ROOT = Path("/content/drive/MyDrive/swinir_project")  # mounted drive location in Colab
-DATA_ROOT = Path("/dataset")  # local data folder in Colab runtime (symlink from drive if preferred)
+DATA_ROOT = Path("/content/HD/dataset")  # local data folder in Colab runtime (symlink from drive if preferred)
 
 # Where to save checkpoints and logs (inside DRIVE_ROOT)
 CHECKPOINT_DIR = DRIVE_ROOT / "checkpoints"
@@ -47,7 +47,7 @@ DEVICE = "cuda" if (USE_CUDA and __import__("torch").cuda.is_available()) else "
 
 # Training
 NUM_EPOCHS = 60
-BATCH_SIZE = 8
+BATCH_SIZE = 4
 LR = 1e-4
 WEIGHT_DECAY = 0.0
 NUM_WORKERS = 4

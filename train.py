@@ -47,12 +47,40 @@ class PerceptualLoss(nn.Module):
 def edge_loss(pred, target):
     def sobel(img):
         # expects BxCxHxW, compute gradient magnitude
-        img_gray = 0.299*img[:,0:1] + 0.587*img[:,1:2] + 0.114*img[:,2:3]
-        gx = nn.functional.conv2d(img_gray, weight=torch.tensor([[[[-1,0,1],[-2,0,2],[-1,0,1]]]]).to(img.device), padding=1)
-        gy = nn.functional.conv2d(img_gray, weight=torch.tensor([[[[-1,-2,-1],[0,0,0],[1,2,1]]]]).to(img.device), padding=1)
-        mag = torch.sqrt(gx*gx + gy*gy + 1e-6)
+        img_gray = 0.299*img[:, 0:1] + 0.587*img[:, 1:2] + 0.114*img[:, 2:3]
+
+        # define kernels once in float32 on the right device
+        sobel_x = torch.tensor(
+            [[[[-1, 0, 1],
+               [-2, 0, 2],
+               [-1, 0, 1]]]],
+            dtype=torch.float32,
+            device=img.device
+        )
+        sobel_y = torch.tensor(
+            [[[[-1, -2, -1],
+               [ 0,  0,  0],
+               [ 1,  2,  1]]]],
+            dtype=torch.float32,
+            device=img.device
+        )
+
+        gx = nn.functional.conv2d(img_gray, weight=sobel_x, padding=1)
+        gy = nn.functional.conv2d(img_gray, weight=sobel_y, padding=1)
+        mag = torch.sqrt(gx * gx + gy * gy + 1e-6)
         return mag
+
     return nn.functional.l1_loss(sobel(pred), sobel(target))
+
+# def edge_loss(pred, target):
+#     def sobel(img):
+#         # expects BxCxHxW, compute gradient magnitude
+#         img_gray = 0.299*img[:,0:1] + 0.587*img[:,1:2] + 0.114*img[:,2:3]
+#         gx = nn.functional.conv2d(img_gray, weight=torch.tensor([[[[-1,0,1],[-2,0,2],[-1,0,1]]]]).to(img.device), padding=1)
+#         gy = nn.functional.conv2d(img_gray, weight=torch.tensor([[[[-1,-2,-1],[0,0,0],[1,2,1]]]]).to(img.device), padding=1)
+#         mag = torch.sqrt(gx*gx + gy*gy + 1e-6)
+#         return mag
+#     return nn.functional.l1_loss(sobel(pred), sobel(target))
 
 def psnr(pred, target, max_val=1.0):
     mse = torch.mean((pred - target) ** 2)
@@ -101,7 +129,7 @@ def train():
 
     model = create_model().to(device)
     optimizer = Adam(model.parameters(), lr=config.LR, weight_decay=config.WEIGHT_DECAY)
-    scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode="min", factor=0.5, patience=5, verbose=True)
+    scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode="min", factor=0.5, patience=5)
 
     l1_loss = nn.L1Loss().to(device)
     perceptual = PerceptualLoss().to(device)
