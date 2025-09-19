@@ -154,13 +154,13 @@ class SwinIRLite(nn.Module):
     """
 
     def __init__(self,
-                 in_chans=3,
-                 embed_dim=60,
-                 depths=(2,2,2),
-                 num_heads=(3,6,12),
-                 window_size=8,
-                 mlp_ratio=2.0,
-                 img_size=1024):
+             in_chans=3,
+             embed_dim=768,
+             depths=(6,6,6),
+             num_heads=(12,12,12),
+             window_size=8,
+             mlp_ratio=2.0,
+             img_size=1024):
         super().__init__()
         self.img_size = img_size
         self.embed_conv = nn.Conv2d(in_chans, embed_dim, kernel_size=3, stride=1, padding=1)

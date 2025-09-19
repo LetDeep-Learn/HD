@@ -50,7 +50,7 @@ DEVICE = "cuda" if (USE_CUDA and __import__("torch").cuda.is_available()) else "
 
 # Training
 NUM_EPOCHS = 5
-BATCH_SIZE = 6
+BATCH_SIZE = 4
 LR = 1e-4
 WEIGHT_DECAY = 0.0
 NUM_WORKERS = 4
@@ -84,9 +84,9 @@ TILE_OVERLAP = 32
 # -------------------------
 IN_CHANS = 3
 OUT_CHANS = 3
-EMBED_DIM = 60      # smaller than paper for speed
-DEPTHS = [2, 2, 2]  # number of Swin blocks per stage (lightweight)
-NUM_HEADS = [3, 6, 12]
+EMBED_DIM = 786      # smaller than paper for speed
+DEPTHS = [6, 6, 6]  # number of Swin blocks per stage (lightweight)
+NUM_HEADS = [12, 12, 12]
 WINDOW_SIZE = 8
 MLP_RATIO = 2.0
 UPSCALE = 1  # We are doing restoration (same size). For SR set e.g. 2 or 4 and adjust heads.
