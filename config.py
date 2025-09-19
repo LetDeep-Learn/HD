@@ -46,8 +46,8 @@ USE_CUDA = True
 DEVICE = "cuda" if (USE_CUDA and __import__("torch").cuda.is_available()) else "cpu"
 
 # Training
-NUM_EPOCHS = 60
-BATCH_SIZE = 4
+NUM_EPOCHS = 5
+BATCH_SIZE = 6
 LR = 1e-4
 WEIGHT_DECAY = 0.0
 NUM_WORKERS = 4
